@@ -1,11 +1,13 @@
 import React from "react";
 import Character from "./Character.jsx";
 import { useEffect, useState } from "react";
+import Search from './Search/Search.jsx'
 
 const Navpage = (props) => {
   return (
     <header className="d-flex justify-content-between align-items-center">
-      <p>Page {props.page}</p>
+      <button  className="btn btn-primary btn-sm" onClick={()=>props.setPage(props.page-1)}>Page {props.page - 1} </button>
+      <p className="btn-light">Page {props.page}</p>
       <button
         className="btn btn-primary btn-sm"
         onClick={() => props.setPage(props.page + 1)}
@@ -20,11 +22,12 @@ const CharacterList = () => {
   const [character, setCharacter] = useState([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
+  const [search, setSearch] = useState("morty")
 
   useEffect(() => {
     async function fetchData() {
       const response = await fetch(
-        `https://rickandmortyapi.com/api/character?page=${page}`
+        `https://rickandmortyapi.com/api/character?page=${page}&name=${search}`
       );
       const data = await response.json();
       setCharacter(data.results);
@@ -32,10 +35,11 @@ const CharacterList = () => {
     console.log(character);
     fetchData();
     setLoading(false);
-  }, [page]);
+  }, [search,page]);
 
   return (
     <div className="container">
+           <Search setSearch={setSearch} />
       <Navpage page={page} setPage={setPage} />
       {loading ? (
         <h1>loading</h1>
